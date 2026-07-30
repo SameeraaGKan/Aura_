@@ -22,7 +22,7 @@ export async function middleware(req: Request, res:Response, next: NextFunction)
         }
         console.log(error)
     }
-    catch {
+    catch(e) {
         res.status(403).json({
             message: "Incorrect credentials"
         })

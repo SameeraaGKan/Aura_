@@ -10,7 +10,7 @@ function App() {
 }
 
 function AppWrapper({supabase}:{supabase:SupabaseClient}){
-  const {claims} = useUser(supabase);
+  const {claims} = useUser();
 
   return <div>
     {!claims && <button onClick={async () => {
