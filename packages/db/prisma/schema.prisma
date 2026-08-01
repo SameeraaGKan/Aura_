@@ -17,6 +17,7 @@ model User {
   address     String
   usdBalance  Int       //$100 -> 100_00, $100.11 ->100_11, assume a decimal of 2 for flat balance
   postions    Position[]
+  orders      OrderHistory[]
 }
 
 model Market {
@@ -31,7 +32,7 @@ model Market {
   orders                    OrderHistory[]
   resolution                PositionType?
 }
-
+ 
 model Position {
   id          String        @id     @default(uuid())
   userID      String
@@ -43,13 +44,13 @@ model Position {
 
 model OrderHistory {
   id          String    @id     @default(uuid())
-  orderType   orderType
+  orderType   OrderType
   qty         Int
   price       Int //0.01 -> 0.99 (1-100)
   userID      String
   marketID    String
 
-  user        User      @relation(@relation(fields:[userID], references: [id]))
+  user        User      @relation(fields:[userID], references: [id])
   market      Market        @relation(fields:[marketID], references: [id])
 }
 
