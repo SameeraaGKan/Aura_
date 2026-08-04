@@ -22,6 +22,10 @@
     },
     "apps/backend": {
       "name": "backend",
+      "dependencies": {
+        "db": "*",
+        "zod": "^4.4.3",
+      },
       "devDependencies": {
         "@types/bun": "latest",
       },

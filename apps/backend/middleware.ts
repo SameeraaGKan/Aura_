@@ -1,4 +1,5 @@
 import type { NextFunction, Response, Request } from "express";
+import {prisma} from "db" 
 
 import { createClient } from "@supabase/supabase-js"
 
@@ -11,16 +12,36 @@ export async function middleware(req: Request, res:Response, next: NextFunction)
 
     try {
         const {data: {user}, error} = await supabase.auth.getUser(token)
-        const address = user?.user_metadata.custom_claims.address
-        if(address){
-            req.userId = address
-            next()
-        }else{
+        const address:string = user?.user_metadata.custom_claims.address
+
+        if(error || !address){
             res.status(403).json({
-            message: "Incorrect credentials"
-        })
+                message: "Incorrect credentials"
+            })
+            return
         }
-        console.log(error)
+
+        const userDB = await prisma.user.upsert({
+            where: {
+                address,
+            },
+            update:{
+                address,
+            },
+            create:{
+                address,
+                usdBalance:0
+            }
+        })
+        if (address){
+            req.userId = userDB.id
+            next()  
+        } else {
+            res.status(403).json({
+                message:"Incorrect credentials"
+            })
+        }
+        
     }
     catch(e) {
         res.status(403).json({

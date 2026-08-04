@@ -8,5 +8,9 @@
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "db": "*",
+    "zod": "^4.4.3"
   }
 }

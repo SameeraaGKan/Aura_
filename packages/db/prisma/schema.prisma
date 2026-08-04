@@ -14,7 +14,7 @@ datasource db {
 
 model User {
   id          String        @id     @default(uuid())
-  address     String
+  address     String        @unique
   usdBalance  Int       //$100 -> 100_00, $100.11 ->100_11, assume a decimal of 2 for flat balance
   postions    Position[]
   orders      OrderHistory[]
