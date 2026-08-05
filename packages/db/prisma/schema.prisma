@@ -13,11 +13,13 @@ datasource db {
 }
 
 model User {
-  id          String        @id     @default(uuid())
-  address     String        @unique
-  usdBalance  Int       //$100 -> 100_00, $100.11 ->100_11, assume a decimal of 2 for flat balance
-  postions    Position[]
-  orders      OrderHistory[]
+  id            String        @id     @default(uuid())
+  address       String        @unique
+  usdBalance    Int       //$100 -> 100_00, $100.11 ->100_11, assume a decimal of 2 for flat balance
+  lockedBalance Int           @default(0) // portion of usdBalance reserved for resting buy orders; not spendable
+  postions      Position[]
+  orders        OrderHistory[]
+  transactions  BalanceTransaction[]
 }
 
 model Market {
@@ -40,6 +42,8 @@ model Position {
   type        PositionType
   user        User          @relation(fields:[userID], references: [id])
   market      Market        @relation(fields:[marketID], references: [id])
+  qty         Int
+  @@unique([userID, marketID, type])
 }
 
 model OrderHistory {
@@ -54,9 +58,19 @@ model OrderHistory {
   market      Market        @relation(fields:[marketID], references: [id])
 }
 
+model BalanceTransaction {
+  id          String                  @id     @default(uuid())
+  userID      String
+  type        BalanceTransactionType
+  amount      Int
+  createdAt   DateTime                @default(now())
+
+  user        User                    @relation(fields:[userID], references: [id])
+}
+
 enum PositionType {
   Yes
-  No 
+  No
 }
 
 enum OrderType{
@@ -64,4 +78,10 @@ enum OrderType{
   Sell
   Split
   Merge
+  Cancel
+}
+
+enum BalanceTransactionType {
+  Deposit
+  Withdrawal
 }

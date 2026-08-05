@@ -36,6 +36,7 @@
     "@types/express": "^5.0.6",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "uuidv4": "^6.2.13"
   }
 }
